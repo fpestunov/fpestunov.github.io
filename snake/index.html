@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mini</title>
+  <style>
+    html {
+      font-family: Roboto, sans-serif;
+      font-size: 1em;
+      color: #777;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Snake</h2>
+    <p>apples: <span id="apples"></span></p>
+    <p>snake length: <span id="length"></span></p>
+    <canvas id=c style="border:9px solid #999">
+  </div>
+
+<script>
+
+t=c.getContext("2d"); // canvas ctx
+
+S=6; // snake length
+s=[]; // snake
+h=0
+v=1
+l=1;  // if 0, lock keys until next frame
+a=[9,9]; // apple
+apples=0
+
+printStats()
+
+// Init snake
+for(i=S;i--;){
+  s.push([i+9,2]);
+}
+
+setInterval(function(){
+
+  // Walk
+  s.unshift([(s[0][0]+h+30)%30,(s[0][1]+v+15)%15]);
+
+  // Eat (get longer)
+  if(a[0]==s[0][0] && a[1]==s[0][1]){
+    a=0;
+    S++;
+    apples++;
+    printStats()
+
+    // New apple
+    while(!a){
+      a=[~~(Math.random()*30),~~(Math.random()*15)];
+      for(i in s){
+        if(s[i][0]==a[0] && s[i][1]==a[1]){
+          a=0;
+        }
+      }
+    }
+  }
+  // Or do not get longer
+  else{
+    s.pop();
+  }
+
+  // Unock controls
+  l=1;
+
+  c.width|=0;
+  drawGrid();
+  for(j in s){
+    t.fillRect(s[j][0]*10,s[j][1]*10,10,10);
+  }
+
+  // Apple
+  t.fillStyle = "red";
+  t.fillRect(a[0]*10,a[1]*10,10,10);
+
+}, 200);
+
+// Keyboard
+onkeyup=function(e){
+  k=e.keyCode;
+  if(l){
+    if(v && (h=k==39?1:k==37?-1:0)){
+      l=v=0;
+    }
+    else if(h && (v=k==40?1:k==38?-1:0)){
+      l=h=0;
+    }
+  }
+}
+
+function drawGrid() {
+  for (var x = 0.5; x < 300; x += 10) {
+    t.moveTo(x, 0);
+    t.lineTo(x, 150);
+  }
+
+  for (var y = 0.5; y < 150; y += 10) {
+    t.moveTo(0, y);
+    t.lineTo(300, y);
+  }
+
+  t.strokeStyle = "#ccc";
+  t.stroke();
+}
+
+function printStats() {
+  el = document.getElementById('length')
+  el.innerText = S
+
+  el = document.getElementById('apples')
+  el.innerText = apples
+}
+
+</script>
+</body>
+</html>
