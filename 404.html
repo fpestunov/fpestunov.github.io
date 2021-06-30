@@ -5,8 +5,51 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>404</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css?family=Roboto+Mono:300,500");
+      body {
+        background-image: url(/universe.jpg);
+        background-size: cover;
+        background-repeat: no-repeat;
+        min-height: 100vh;
+        min-width: 100vw;
+        font-family: "Roboto Mono", monospace;
+        color: rgba(255, 255, 255, 0.87);
+      }
+      .container {
+        display: grid;
+        place-items: center;
+      }
+
+      .title {
+        font-size: 16rem;
+        font-weight: 500;
+      }
+      p {
+        font-size: 3rem;
+        font-weight: 300;
+        font-weight: bold;
+        margin-top: 0;
+      }
+      .button {
+        display: inline-block;
+        margin-top: 10rem;
+        padding: 0.5rem 1rem;
+        border: 3px solid rgba(255, 255, 255, 0.87);
+        border-radius: 5px;
+        background: transparent;
+        font-size: 3rem;
+        color: rgba(255, 255, 255, 0.87);
+        text-decoration: none;
+        cursor: pointer;
+      }
+    </style>
   </head>
-  <body>
-    <h1>404, page not found</h1>
+  <body class="container">
+    <div style="text-align: center">
+      <div class="title">404</div>
+      <p>PAGE NOT FOUND</p>
+      <a href="/" class="button">GO HOME</a>
+    </div>
   </body>
 </html>
