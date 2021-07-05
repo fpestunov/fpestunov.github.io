@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            font-family: Roboto, sans-serif;
+            font-size: 20px;
+        }
+
+        body {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 90vh;
+        }
+
+        .container {
+          text-align: center;
+        }
+
+        #board {
+            border: 1px solid gray;
+            display: grid;
+            grid-template-rows: repeat(3, 150px);
+            grid-template-columns: repeat(3, 150px);
+            width: 450px;
+        }
+
+        #board>div {
+            border: 1px solid gray;
+            font-size: 5em;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        #result,
+        #reset {
+            margin-top: 20px;
+            height: 30px;
+        }
+    </style>
+</head>
+
+<body>
+  <div class="container">
+    <div id="board"></div>
+    <div id="result"></div>
+    <button id="reset">Reset</button>
+  </div>
+    <script>
+        const players = ['x', 'o']
+        let currentPlayer = 0; // начинает X
+        // currentPlayer = floor(random(players.length));
+
+        const board = document.getElementById('board')
+        const result = document.getElementById('result')
+        const reset = document.getElementById('reset')
+
+        let counter = 0;
+        let winner = null;
+        // 3. добавляем хранение в массиве
+        let field = ['', '', '', '', '', '', '', '', '']
+        const winnersTable = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6],
+        ]
+
+        function renderBoard() {
+            board.innerText = ''
+            for (let index = 0; index < 9; index++) {
+                const div = document.createElement('div')
+                div.setAttribute('data-cell', index)
+                div.innerText = field[index]
+                board.append(div)
+            }
+        }
+
+        // 4. обработчик события
+
+
+        board.addEventListener('click', function (event) {
+            if (counter === 9) {
+                return;
+            }
+            const targetData = event.target.dataset;
+            if (targetData.cell && field[targetData.cell] === '') {
+                counter++;
+                field[targetData.cell] = players[currentPlayer]
+                currentPlayer = currentPlayer === 0 ? 1 : 0;
+                renderBoard()
+                const winnerResult = checkWinner()
+                if (winnerResult) {
+                    counter = 9
+                    result.innerText += winnerResult
+                }
+            }
+        })
+
+        reset.addEventListener('click', function () {
+            field = ['', '', '', '', '', '', '', '', '']
+            result.innerText = ``
+            counter = 0
+            winner = null
+            renderBoard()
+        })
+
+        // 5. проверка выйгрыша
+        function isEquals(a, b, c) {
+            return (field[a] === field[b] && field[b] === field[c] && field[a] !== '')
+        }
+
+        // null, x || 0, tie (ничья)
+        function checkWinner() {
+            for (let index = 0; index < winnersTable.length; index++) {
+                if (isEquals(...winnersTable[index])) {
+                    winner = field[winnersTable[index][0]]
+                    return `player ${winner} win`
+                }
+            }
+            return counter === 9 ? 'tie' : winner;
+        }
+
+        renderBoard()
+
+    </script>
+</body>
+
+</html>
