@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Minesweeper</title>
+    <style>
+      * {
+          font-family: Roboto, sans-serif;
+      }
+
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 90vh;
+      }
+
+      .container {
+        text-align: center;
+        max-width: 300px;
+      }
+
+      table {
+        border: 1px solid #666;
+      }
+
+      td {
+        width: 30px;
+        height: 30px;
+        background-color: #aaa;
+      }
+
+      .opened {
+        background-color: #eee;
+      }
+
+      .flag::after {
+        content: "⚑";
+      }
+
+      .mined {
+        background-color: red;
+      }
+
+      .mined::after {
+        content: "💣";
+      }
+
+      button {
+        margin-top: 20px;
+        font-size: 16px;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Minesweeper</h1>
+      <table id="board"></table>
+      <button onclick="reset()">reset</button>
+      <h3>💡 how to play</h3>
+      <p>The rule of the game is simple, the number on a block shows the number of mines adjacent to it and you have to flag ⚑ all the mines 💣.</p>
+      <p><strong>Left Click</strong> - open block.</p>
+      <p><strong>Right Click</strong> - flag block.</p>
+      <p>So lets get sweeping!</p>
+    </div>
+    <script>
+      const table = document.getElementById("board");
+      const number = 8;
+      const totalBombs = number-1
+      let totalFlags = 0
+      let gameOver = false;
+      let viewed = initArray();
+      let flags = initArray();
+      let bombs = initArray();
+      const random = (up) => Math.floor(Math.random() * up);
+      const arrayHasIndex = (array, index) => array.hasOwnProperty(index);
+
+      init();
+      render();
+
+      function init() {
+        gameOver = false;
+        viewed = initArray();
+        flags = initArray();
+        bombs = initArray();
+        // debugger
+        generateBomb();
+        countBombs();
+      }
+
+      function initArray(withNumber = 0) {
+        const arr = [];
+        for (let i = 0; i < number * number; i++) {
+          arr[i] = withNumber;
+        }
+        return arr;
+      }
+
+      function calculateNeigbors(cell) {
+        const cellTop = cell - number
+        const cellBottom = cell + number
+        const neighbors = [cellTop, cellBottom]
+        const rightCorner = [cellTop-1, cell-1, cellBottom-1]
+        const leftCorner = [cellTop+1, cell+1, cellBottom+1]
+
+        if (cell%number === 0) {
+          return [...neighbors, ...leftCorner].filter(item => item>-1)
+        }
+        if ((cell+1)%number === 0) {
+          return [...neighbors, ...rightCorner].filter(item => item>-1)
+        }
+        
+        return [...neighbors, ...leftCorner, ...rightCorner].filter(item => item>-1)
+      }
+
+      function generateBomb() {
+        for (let i = 0; i < totalBombs; i++) {
+          const rndNumber = random(number * number);
+          if (bombs[rndNumber] === 9) {
+            i--;
+          } else {
+            bombs[rndNumber] = 9;
+            // заполняем цифры
+          }
+        }
+      }
+
+      function countBombs() {
+        for (let index = 0; index < number * number; index++) {
+          if (bombs[index] === 9) {
+            continue;
+          }
+
+          let bombsAround = 0;
+          calculateNeigbors(index).forEach((item) => {
+            if (arrayHasIndex(bombs, item) && bombs[item] === 9) {
+              bombsAround += 1;
+            }
+          });
+          bombs[index] = bombsAround;
+        }
+      }
+
+      function render() {
+        // debugger;
+        let html = "";
+        let index = 0;
+        for (let row = 0; row < number; row++) {
+          html += "<tr>";
+          for (let col = 0; col < number; col++) {
+            let cellClass = "";
+            if (flags[index]) {
+              cellClass = "class='flag'";
+            } else {
+              if (viewed[index]) {
+                cellClass = "class='opened'";
+                if (bombs[index] === 9) {
+                  cellClass = "class='mined'";
+                }
+              }
+            }
+            //const cellClass = viewed[index] ? "class='mined'" : "";
+            const value =
+              viewed[index] && bombs[index] && bombs[index] !== 9
+                ? bombs[index]
+                : "";
+            html += `<td ${cellClass} onclick=openCell(${index}) oncontextmenu='return addFlag(${index})'>${value}`;
+            index++;
+          }
+        }
+        table.innerHTML = html;
+      }
+
+      function openCell(cellIndex) {
+        if (gameOver) {
+          return;
+        }
+        if (flags[cellIndex]) {
+          return false;
+        }
+        if (!viewed[cellIndex]) {
+          viewed[cellIndex] = 1;
+        }
+        if (bombs[cellIndex] === 9) {
+          gameOver = true;
+          viewed = initArray(1);
+        }
+        render();
+      }
+
+      function showFreeCells () {
+        for (let index = 0; index < number * number; index++) {
+            if (bombs[index] !== 9) {
+              viewed[index] = 1
+            }
+          }
+
+        render();
+      }
+
+      function addFlag(cellIndex) {
+        if (gameOver) {
+          return false;
+        }
+
+
+        if (viewed[cellIndex]) {
+          return false;
+        }
+        flags[cellIndex] = !flags[cellIndex];
+        debugger
+        totalFlags = flags.filter(item => item === true).length;
+        render();
+        checkWin();
+        return false;
+      }
+
+      function checkWin() {
+        if (totalBombs === totalFlags) {
+          
+          let chekedFlags = 0
+          for (let index = 0; index < number * number; index++) {
+            if (bombs[index] === 9 && flags[index]===true) {
+              chekedFlags += 1
+            }
+          }
+          
+          if (chekedFlags === totalBombs) {
+            showFreeCells()
+            alert('you win')
+            gameOver = true
+          }
+        }
+      }
+
+      function reset() {
+        init();
+        render();
+      }
+    </script>
+  </body>
+</html>
