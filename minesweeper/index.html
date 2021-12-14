@@ -170,7 +170,7 @@
             html += `<td ${cellClass} onclick=openCell(${index}) oncontextmenu='return addFlag(${index})'>${value}`;
             index++;
           }
-        }
+        } // а как же закрывающиеся тэги? сами проставляются? 
         table.innerHTML = html;
       }
 
@@ -183,6 +183,7 @@
         }
         if (!viewed[cellIndex]) {
           viewed[cellIndex] = 1;
+          if (bombs[cellIndex] == 0) {fillFreeCells(cellIndex, 0);}         
         }
         if (bombs[cellIndex] === 9) {
           gameOver = true;
@@ -194,11 +195,49 @@
       function showFreeCells () {
         for (let index = 0; index < number * number; index++) {
             if (bombs[index] !== 9) {
-              viewed[index] = 1
+              viewed[index] = 1;
             }
           }
 
         render();
+      }
+
+      function fillFreeCells(cellIndex, d) {
+        let yy = Math.floor(cellIndex/number);
+        let xx = cellIndex - yy * number;
+        let x = xx;
+        let y  = yy;
+        for (let step = 0; step < 8; step++){
+          //render();
+          // snoof direction: 0 - to top, increment - turn clkwise to 45 degrees
+          dir = d + step;
+          if (dir > 7) {dir = dir - 8;}
+          if (dir == 0) {y--;}
+          else if (dir == 1) {x++;}
+          else if (dir == 2) {y++;}
+          else if (dir == 3) {y++;}
+          else if (dir == 4) {x--;}
+          else if (dir == 5) {x--;}
+          else if (dir == 6) {y--;}
+          else if (dir == 7) {y--;}
+          if ((x>=number)||(x<0)||(y>=number)||(y<0)) {
+            continue;
+          }
+          cellIndex = y*number+x;
+          if (viewed[cellIndex] == 1){
+            continue;
+          }
+          if (bombs[cellIndex] != 9){
+            viewed[cellIndex] = 1;
+          }
+          if (bombs[cellIndex] !=0){
+            continue;
+          }
+          fillFreeCells(cellIndex, dir-2);  // recursive call
+        }
+
+        console.log('y=' + y + '; x=' + x);
+        return;
       }
 
       function addFlag(cellIndex) {
