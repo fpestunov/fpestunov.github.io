@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="dic.js"></script>
+    <script src="smg.js"></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <h2>Help</h2>
+    <p>
+      <audio controls>
+        <source src="mp3/beatles-help.mp3" type="audio/mpeg" />
+      </audio>
+    </p>
+    <pre>
+Help! I need somebody, help! Not just anybody,
+Help! You know I need someone, help!
+
+When I was younger, so much younger than today
+I never needed anybody's help in any way,
+But now these days are gone, I'm not so self-assured.
+Now I find I've changed my mind
+I've opened up the doors.
+
+Help me if you can, I'm feeling down,
+And I do appreciate you being 'round.
+Help me get my feet back on the ground,
+Won't you please please help me?
+
+And now my life has changed in, oh, so many ways,
+My independence seems to vanish in the haze,
+But ev'ry now and then I feel so insecure.
+I know that I just need you like I've never done before.
+
+Help me if you can, I'm feeling down,
+And I do appreciate you being 'round.
+Help me get my feet back on the ground,
+Won't you please please help me?
+
+When I was younger, so much younger than today
+I never needed anybody's help in any way,
+But now these days are gone, I'm not so self-assured.
+Now I find I've changed my mind
+I've opened up the doors.
+
+Help me if you can, I'm feeling down,
+And I do appreciate you being 'round.
+Help me get my feet back on the ground,
+Won't you please please help me?
+Help me, help me, ooh.
+
+  </pre
+    >
+    <script>
+      let stat = [];
+      for (let i = 0; i < 11; i++) {
+        stat[i] = [];
+      }
+
+      words.forEach((word) => {
+        const pos = dic.indexOf(word) + 1;
+        if (pos === -1) {
+          const temp = stat[0];
+          temp.push(word);
+          stat[0] = temp;
+        } else {
+          const range = Math.round(pos / 100) + 1;
+          const temp = stat[range];
+          temp.push(word);
+          stat[range] = temp;
+        }
+      });
+    </script>
+  </body>
+</html>
