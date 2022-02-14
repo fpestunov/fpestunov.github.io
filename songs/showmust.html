@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="dic.js"></script>
+    <script src="smg.js"></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <h2>Show Must Go On</h2>
+    <p>
+      <audio controls>
+        <source src="/mp3/queen-show-must-go-on.mp3" type="audio/mpeg" />
+      </audio>
+    </p>
+
+    <pre>
+     Empty spaces - what are we living for?
+     Abandoned places - I guess we know the score..
+     On and on!
+     Does anybody know what we are looking for?
+     
+     Another hero - another mindless crime
+     Behind the curtain, in the pantomime.
+     Hold the line!
+     Does anybody want to take it anymore?
+     The Show must go on!
+     The Show must go on! Yeah!
+     Inside my heart is breaking,
+     My make-up may be flaking,
+     But my smile, still, stays on!
+     
+     Whatever happens, I'll leave it all to chance.
+     Another heartache - another failed romance.
+     On and on...
+     Does anybody know what we are living for?
+     I guess I'm learning
+     I must be warmer now..
+     I'll soon be turning, round the corner now.
+     Outside the dawn is breaking,
+     But inside in the dark I'm aching to be free!
+     
+     The Show must go on!
+     The Show must go on! Yeah, yeah!
+     Ooh! Inside my heart is breaking!
+     My make-up may be flaking...
+     But my smile, still, stays on!
+     Yeah! oh oh oh
+     
+     My soul is painted like the wings of butterflies,
+     Fairy tales of yesterday, will grow but never die,
+     I can fly, my friends!
+     
+     The Show must go on! Yeah!
+     The Show must go on!
+     I'll face it with a grin!
+     I'm never giving in!
+     On with the show!
+     
+     I'll top the bill!
+     I'll overkill!
+     I have to find the will to carry on!
+     On with the,
+     On with the show!
+     
+     The Show must go on.
+  </pre
+    >
+    <h3>words</h3>
+    total words 238, Dictionary 102
+    <p>
+      empty, spaces, what, are, we, living, for, abandoned, places, i, guess,
+      know, the, score, on, and, does, anybody, looking, another, hero,
+      mindless, crime, behind, curtain, in, pantomime, hold, line, want, to,
+      take, it, anymore, show, must, go, yeah, inside, my, heart, is, breaking,
+      makeup, may, be, flaking, but, smile, still, stays, whatever, happens,
+      ill, leave, all, chance, heartache, failed, romance, im, learning, warmer,
+      now, soon, turning, round, corner, outside, dawn, dark, aching, free, ooh,
+      oh, soul, painted, like, wings, of, butterflies, fairy, tales, yesterday,
+      will, grow, never, die, can, fly, friends, face, with, a, grin, giving,
+      top, bill, overkill, have, find, carry
+    </p>
+    <script>
+      let stat = [];
+      for (let i = 0; i < 11; i++) {
+        stat[i] = [];
+      }
+
+      words.forEach((word) => {
+        const pos = dic.indexOf(word) + 1;
+        if (pos === -1) {
+          const temp = stat[0];
+          temp.push(word);
+          stat[0] = temp;
+        } else {
+          const range = Math.round(pos / 100) + 1;
+          const temp = stat[range];
+          temp.push(word);
+          stat[range] = temp;
+        }
+      });
+    </script>
+  </body>
+</html>
